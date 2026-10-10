@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lofi Café</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <h1>☕ Lofi Café</h1>
+    <p id="now">Elige una estación</p>
+
+    <div class="controls">
+      <button id="prev" title="Anterior">⏮</button>
+      <button id="play" title="Play / Pausa">▶</button>
+      <button id="next" title="Siguiente">⏭</button>
+      <input id="volume" type="range" min="0" max="100" value="60" title="Volumen">
+    </div>
+
+    <div class="listbar">
+      <button id="edit">Editar</button>
+      <button id="reset" class="edit-only" title="Volver a la lista de streams.js">Restaurar lista</button>
+    </div>
+    <ul id="list"></ul>
+
+    <form id="add">
+      <input id="url" placeholder="Pega un link de YouTube para añadir un stream" required>
+      <button>Añadir</button>
+    </form>
+
+    <label class="toggle"><input id="showVideo" type="checkbox"> Mostrar video</label>
+  </main>
+
+  <!-- El reproductor de YouTube; oculto por defecto (solo audio) -->
+  <div id="player-wrap" class="hidden"><div id="player"></div></div>
+
+  <script src="streams.js"></script>
+  <script src="app.js"></script>
+  <script src="https://www.youtube.com/iframe_api"></script>
+</body>
+</html>
