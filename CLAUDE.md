@@ -22,3 +22,9 @@ Scripts load in this order in `index.html`: `streams.js` → `app.js` → YouTub
 - `app.js` holds all state in the `stations` array (`{ id, title, name }`) persisted to `localStorage` under `lofi-cafe-stations`. `title` is fetched from YouTube's oEmbed endpoint (no API key); `name` is an optional user override that takes priority (see `label()`). Current station is tracked by video `id`, not by index.
 - The UI has a normal mode and an edit mode (`body.editing` class toggles edit-only controls via CSS). `render()` rebuilds the whole list from `stations`.
 - Audio-only is achieved by hiding the player container with CSS (`#player-wrap.hidden`). The IFrame API has no audio-only mode, so video data is still downloaded; hiding does not save bandwidth.
+
+## Theme and PWA
+
+- Colors are Catppuccin Macchiato, defined as CSS variables in `:root` at the top of `style.css`; use them instead of hex literals.
+- Installable PWA: `manifest.webmanifest`, `sw.js` (network-first cache of the app shell only; cross-origin YouTube requests are never intercepted) and `icons/`. When adding or renaming a shell file, update `SHELL` in `sw.js` and bump `CACHE`.
+- `app.js` registers the service worker and wires the Media Session API (lock-screen/notification play, pause, prev, next) from the player's `onStateChange`.

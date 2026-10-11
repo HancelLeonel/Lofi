@@ -124,7 +124,10 @@ window.onYouTubeIframeAPIReady = () => {
     playerVars: { playsinline: 1 },
     events: {
       onReady: () => { ready = true; player.setVolume($("volume").value); },
-      onStateChange: (e) => { $("play").textContent = e.data === YT.PlayerState.PLAYING ? "⏸" : "▶"; },
+      onStateChange: (e) => {
+        $("play").textContent = e.data === YT.PlayerState.PLAYING ? "⏸" : "▶";
+        updateMediaSession(e.data);
+      },
     },
   });
 };
@@ -161,3 +164,25 @@ $("reset").onclick = () => {
 
 render();
 stations.forEach(refreshTitle); // sincroniza títulos con YouTube al abrir
+
+// PWA: service worker y controles multimedia (pantalla de bloqueo / notificación)
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+
+if ("mediaSession" in navigator) {
+  const ms = navigator.mediaSession;
+  const act = (name, fn) => { try { ms.setActionHandler(name, fn); } catch {} };
+  act("play", () => ready && player.playVideo());
+  act("pause", () => ready && player.pauseVideo());
+  act("previoustrack", () => step(-1));
+  act("nexttrack", () => step(1));
+}
+
+function updateMediaSession(state) {
+  if (!("mediaSession" in navigator)) return;
+  const s = stations.find((x) => x.id === currentId);
+  if (s) navigator.mediaSession.metadata = new MediaMetadata({
+    title: label(s), artist: "Lofi Café",
+    artwork: [{ src: thumb(s.id), sizes: "320x180", type: "image/jpeg" }],
+  });
+  navigator.mediaSession.playbackState = state === YT.PlayerState.PLAYING ? "playing" : "paused";
+}
